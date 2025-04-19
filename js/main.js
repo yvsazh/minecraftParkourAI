@@ -1,4 +1,9 @@
+var moves = 500;
 
+function choose(choices) {
+    var index = Math.floor(Math.random() * choices.length);
+    return choices[index];
+}
 // Створюємо сцену
 const scene = new THREE.Scene();
 
@@ -27,18 +32,18 @@ world.generate();
 scene.add(world);
 
 // Створюємо гравця
-// const spectator = new Spectator(camera, renderer.domElement, world);
-var player;
+const spectator = new Spectator(camera, renderer.domElement, world);
+var population;
 function setup() {
-    player = new Player(scene, world);
-    player.attachCamera(camera);
+    population = new Population(scene, world, 10);
+    // player.attachCamera(camera);
 }
 
 // Анімація
 function draw() {
     // requestAnimationFrame(animate);
-    // spectator.update();
-    player.update();
+    spectator.update();
+    population.update();
     renderer.render(scene, camera);
 }
 
