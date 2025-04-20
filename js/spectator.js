@@ -15,6 +15,25 @@ class Spectator {
       this.prevMouse = { x: 0, y: 0 }; // Попередні клікабельні координати для обертання
       this.raycaster = new THREE.Raycaster();
       this.highlighted = null;        // { object, origEmissive, intersect }
+      this.spawnMarker = null; 
+      
+      this.goalMarker = null;
+
+      if (this.spawnMarker == null) {
+        const spPos = {x: this.world.size/2, y: 1.5, z: this.world.size/2}
+        const circleGeo = new THREE.CircleGeometry(0.5, 32);
+        const circleMat = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        const marker = new THREE.Mesh(circleGeo, circleMat);
+        marker.rotation.x = -Math.PI / 2;
+        spPos.y -= 0.8;
+        marker.position.copy(spPos);
+        marker.userData = { type: 'spawnMarker' };
+  
+        this.world.addBlock(marker);
+        this.spawnMarker = marker;
+        spawnpoint = [spPos.x, spPos.y, spPos.z];
+      }
+
   
       this.initControls();
     }
@@ -79,24 +98,84 @@ class Spectator {
       }
       // Додавання блоку лівою кнопкою
       else if (event.button === 0) {
-        if (this.highlighted) {
+        if (instrument === 1 && this.highlighted) {
           const hit = this.highlighted.intersect;
           const normal = hit.face.normal.clone()
             .applyMatrix3(new THREE.Matrix3().getNormalMatrix(hit.object.matrixWorld));
           const pos = hit.object.position.clone().add(normal);
           const newBlock = new Block('stone', 1, pos);
-          this.world.add(newBlock);
+          newBlock.userData = { type: 'block' };
+          this.world.addBlock(newBlock);
+          
+        }
+        if (instrument === 2 && this.highlighted) {
+          const hit = this.highlighted.intersect;
+          const normal = hit.face.normal.clone()
+            .applyMatrix3(new THREE.Matrix3().getNormalMatrix(hit.object.matrixWorld));
+          const basePos = hit.object.position.clone();
+          const spPos = basePos.clone().add(normal).add(new THREE.Vector3(0, 0.5, 0));
+  
+          // Remove previous spawn marker
+          if (this.spawnMarker) {
+            this.world.removeBlock(this.spawnMarker);
+            this.spawnMarker.geometry.dispose();
+            this.spawnMarker.material.dispose();
+          }
+  
+          // Create a yellow circle marker
+          const circleGeo = new THREE.CircleGeometry(0.5, 32);
+          const circleMat = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+          const marker = new THREE.Mesh(circleGeo, circleMat);
+          marker.rotation.x = -Math.PI / 2;
+          spPos.y -= 0.8;
+          marker.position.copy(spPos);
+          marker.userData = { type: 'spawnMarker' };
+  
+          this.world.addBlock(marker);
+          this.spawnMarker = marker;
+          spawnpoint = [spPos.x, spPos.y, spPos.z];
+        }
+        if (instrument === 3 && this.highlighted) {
+          const hit = this.highlighted.intersect;
+          const normal = hit.face.normal.clone()
+            .applyMatrix3(new THREE.Matrix3().getNormalMatrix(hit.object.matrixWorld));
+          const basePos = hit.object.position.clone();
+          const spPos = basePos.clone().add(normal).add(new THREE.Vector3(0, 0.5, 0));
+  
+          // Remove previous spawn marker
+          if (this.goalMarker) {
+            this.world.removeBlock(this.goalMarker);
+            this.goalMarker.geometry.dispose();
+            this.goalMarker.material.dispose();
+          }
+  
+          // Create a yellow circle marker
+          const circleGeo = new THREE.CircleGeometry(0.5, 32);
+          const circleMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+          const marker = new THREE.Mesh(circleGeo, circleMat);
+          marker.rotation.x = -Math.PI / 2;
+          spPos.y -= 0.8;
+          marker.position.copy(spPos);
+          marker.userData = { type: 'goalMarker' };
+  
+          this.world.addBlock(marker);
+          this.goalMarker = marker;
+          goal = [spPos.x, spPos.y, spPos.z];
         }
       }
       // Видалення блоку середньою кнопкою
       else if (event.button === 1) {
-        if (this.highlighted) {
-          const obj = this.highlighted.object;
-          this.world.remove(obj);
-          obj.geometry.dispose();
-          obj.material.dispose();
-          this.highlighted = null;
+        if (instrument == 1) {
+          if (this.highlighted) {
+            const obj = this.highlighted.object;
+            this.world.remove(obj);
+            obj.geometry.dispose();
+            obj.material.dispose();
+            this.highlighted = null;
+            this.world.removeBlock(obj);
+          }
         }
+        
       }
     }
   
@@ -128,7 +207,7 @@ class Spectator {
         this.prevMouse.y = event.clientY;
         return;
       }
-  
+
       // Raycast по всіх блоках у світі
       this.raycaster.setFromCamera(this.mouse, this.camera);
       const intersects = this.raycaster.intersectObjects(this.world.children);

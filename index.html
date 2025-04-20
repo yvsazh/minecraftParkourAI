@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/three@0.124.0/build/three.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/GLTFLoader.js"></script>
     <title>Minecraft Parkour AI</title>
 
     <style>
@@ -11,9 +12,89 @@
             margin:0px;
             overflow: hidden;
         }
+        #settings {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        font-family: Arial, sans-serif;
+        width: 300px;
+        zoom: 60%;
+    }
+    #settings label {
+        display: block;
+        margin-top: 10px;
+    }
+    #settings input[type="range"] {
+        width: 100%;
+    }
+    #settings button {
+        margin-top: 15px;
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    #settings button:hover {
+        background-color: #45a049;
+    }
+    .range-value {
+        float: right;
+    }
+
+    #instructions {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        font-family: Arial, sans-serif;
+        width: 700px;
+        zoom: 60%;
+    }
     </style>
 </head>
 <body>
+
+    <div id="instructions">
+        <p>1 - Add/remove blocks; 2 - Change spawnpoint; 3 - Add goal; T - Start/stop simulation</p>
+        <p>WASD - Move; Shift - down; Space - up; Toggle right mouse button - rotate camera; Middle mouse button - delete blocks</p>
+        <hr>
+        <p>The grass is only needed for convenient level setup; once the simulation starts, it will DISAPPEAR!</p>
+        <hr>
+        <p id="won"></p>
+    </div>
+
+    <div id="settings">
+        <p>Generation: <span id="gen">0</span></p>
+        <p>Moves: <span id="moves">0</span></p>
+        <hr>
+        <label>
+            Increase Moves By: <span id="increaseMovesByValue" class="range-value">5</span>
+            <input type="range" id="increaseMovesBy" min="5" max="100" step="5" value="5">
+        </label>
+    
+        <!-- <label>
+            Evolution Speed: <span id="evolutionSpeedValue" class="range-value">1</span>
+            <input type="range" id="evolutionSpeed" min="1" max="20" step="1" value="1">
+        </label> -->
+    
+        <label>
+            Population Size: <span id="popSizeValue" class="range-value">100</span>
+            <input type="range" id="popSize" min="5" max="1000" step="5" value="100">
+        </label>
+    
+        <button onclick="applySettings()">Застосувати зміни</button>
+    </div>
 
     <script src="./js/p5.js"></script>
 
