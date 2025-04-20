@@ -56,7 +56,7 @@ class Player {
     _loadModel() {
         const loader = new THREE.GLTFLoader();
         loader.load(
-            "../assets/steve (1).glb",
+            "../minecraftParkourAI/assets/steve (1).glb",
             (gltf) => {
                 this.mesh = gltf.scene;
                 this.scene.add(this.mesh);
