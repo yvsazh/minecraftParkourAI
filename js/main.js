@@ -33,12 +33,23 @@ document.addEventListener('contextmenu', function(event) {
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x80a0e0);
+// renderer.setClearColor(0x00ff00);
 document.body.appendChild(renderer.domElement);
 
-// Додаємо базове світло
-const light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(1, 1, 1).normalize();
-scene.add(light);
+// Додаємо розсіяне світло (ambient light)
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.1); // м’яке біле світло
+scene.add(ambientLight);
+
+// Додаємо основне спрямоване світло
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(30, 50, 30); // позиція в сцені
+directionalLight.castShadow = true; // якщо потрібні тіні
+scene.add(directionalLight);
+
+// Можна додати ще одне світло з іншого боку для кращої видимості
+const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
+fillLight.position.set(-30, 20, -30);
+scene.add(fillLight);
 
 const world = new World();
 world.generate();
