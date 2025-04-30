@@ -66,20 +66,21 @@
 <body>
 
     <div id="instructions">
-        <p>1 - Add/remove blocks; 2 - Change spawnpoint; 3 - Add goal; T - Start/stop simulation</p>
-        <p>WASD - Move; Shift - down; Space - up; Toggle right mouse button - rotate camera; Middle mouse button - delete blocks</p>
+        <h3>Управління(сподіваюсь зрозумієте):</h3>
+        <p>1 - Додати/видалити блоки; 2 - змінити спавн гравців; 3 - додати ціль; T - Почати/зупинити еволюцію</p>
+        <p>WASD - Рухатись; Shift - вниз; Space - вверх; ПКМ - поворот камери; Середня КМ - видалити блок; ЛКМ - поставити блок і все інше</p>
         <hr>
-        <p>The grass is only needed for convenient level setup; once the simulation starts, it will DISAPPEAR!</p>
+        <p>Платформа з трави ЗНИКНЕ, коли ви почнете еволюцію</p>
         <hr>
         <p id="won"></p>
     </div>
 
     <div id="settings">
-        <p>Generation: <span id="gen">0</span></p>
-        <p>Moves: <span id="moves">0</span></p>
+        <p>Покоління: <span id="gen">0</span></p>
+        <p>Рухи: <span id="moves">0</span></p>
         <hr>
         <label>
-            Increase Moves By: <span id="increaseMovesByValue" class="range-value">5</span>
+            Збільшувати рухи на(кожні 5 поколінь): <span id="increaseMovesByValue" class="range-value">5</span>
             <input type="range" id="increaseMovesBy" min="5" max="100" step="5" value="5">
         </label>
     
@@ -89,7 +90,7 @@
         </label> -->
     
         <label>
-            Population Size: <span id="popSizeValue" class="range-value">100</span>
+            Розмір популяції: <span id="popSizeValue" class="range-value">100</span>
             <input type="range" id="popSize" min="5" max="1000" step="5" value="100">
         </label>
     
