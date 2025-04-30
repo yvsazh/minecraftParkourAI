@@ -1,7 +1,7 @@
 const textureLoader = new THREE.TextureLoader();
 const TEXTURE_PATHS = {
-  grass: '../assets/grass.webp',
-  stone: '../assets/stone.webp'
+  grass: '../minecraftParkourAI/assets/grass.webp',
+  stone: '../minecraftParkourAI/assets/stone.webp'
 };
 
 // Load the textures into a lookup object
